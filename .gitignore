@@ -1,0 +1,20 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
+
+# Temp
+*.tmp
+*.bak
+
+# Local plugin testing overrides (keep committed plugin config in repo root)
+.cursor/
+
+# Large doc dumps (use site-scoped search against docs.catalyst.zoho.com instead)
+llms-full.txt

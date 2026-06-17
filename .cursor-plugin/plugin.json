@@ -1,0 +1,29 @@
+{
+  "name": "catalyst-by-zoho",
+  "displayName": "Catalyst by Zoho",
+  "version": "1.0.0",
+  "description": "AI agent skill for Catalyst by Zoho — full-stack serverless cloud platform. Covers all services, SDKs, CLI, architecture patterns, pricing, migration guides, and Zoho MCP tool-based resource management.",
+  "author": {
+    "name": "Catalyst by Zoho",
+    "email": "support@zohocatalyst.com"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "catalyst",
+    "zoho",
+    "serverless",
+    "mcp",
+    "datastore",
+    "zcql",
+    "appsail",
+    "stratus",
+    "functions",
+    "cloud-services"
+  ],
+  "rules": "./CATALYST.md",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "logo": "./assets/catalyst_logo.svg",
+  "homepage": "https://github.com/catalystbyzoho/cursor-plugin",
+  "repository": "https://github.com/catalystbyzoho/cursor-plugin"
+}
