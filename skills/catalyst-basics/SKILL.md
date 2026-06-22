@@ -14,10 +14,12 @@ metadata:
 ## How It Works
 
 1. **MCP check first** — Before reading any local files, look for `CatalystbyZoho_*` tools. If available, use MCP to get org ID, project ID, and all resource IDs instead of asking the user.
-2. **Pre-flight** — Confirm `.catalystrc` and `catalyst.json` exist. If missing, stop and direct the user to run `catalyst login` then `catalyst init`.
-3. **Project structure** — Load `references/project-basics.md` for directory layout, `catalyst.json`, IDs, and dev-to-prod checklist.
-4. **CLI questions** — Load `references/cli.md` for the exact command, flags, and safety rules.
-5. **Answer** — Provide the specific ID path or CLI command needed. Never ask the user to manually look up IDs when MCP is connected.
+2. **New to Catalyst?** — If the user is setting up Catalyst for the first time or asking "how do I start", load `references/quick-start.md` for the full walkthrough.
+3. **Console navigation** — If the user asks how to find IDs, create tables, set permissions, or configure CORS in the console, load `references/console-ui-guide.md`.
+4. **Pre-flight** — Confirm `.catalystrc` and `catalyst.json` exist. If missing, stop and direct the user to run `catalyst login` then `catalyst init`.
+5. **Project structure** — Load `references/project-basics.md` for directory layout, `catalyst.json`, IDs, and dev-to-prod checklist.
+6. **CLI questions** — Load `references/cli.md` for the exact command, flags, and safety rules.
+7. **Answer** — Provide the specific ID path or CLI command needed. Never ask the user to manually look up IDs when MCP is connected.
 
 ## Triggers
 
@@ -35,10 +37,8 @@ Look for tools prefixed with `CatalystbyZoho_` (e.g., `CatalystbyZoho_List_All_P
 - Use MCP tools to fetch table names, bucket names, ZAIDs, and all other project details directly — do NOT ask the user to copy-paste IDs from the console
 
 **If MCP tools are NOT available:**
-- Prompt the user to authorize MCP before proceeding
-- **Cursor plugin users:** Open **Cursor Settings → MCP** → click **Connect** on `catalyst-by-zoho` (the plugin ships a pre-configured endpoint; no URL copying needed)
-- **Other hosts:** See `references/setup/cursor.md`, `references/setup/claude-code.md`, or `references/setup/github-copilot.md` for host-specific Connect steps
-- If tools appear but return wrong org/data, the DC endpoint may be wrong — guide the user to switch to their region's URL (see `catalyst-zoho-mcp/references/zoho-mcp.md` DC table)
+- Prompt the user to connect Zoho MCP before proceeding
+- Guide them to: **VS Code → Settings → MCP** (or Claude Desktop `claude_desktop_config.json`) and add the Catalyst MCP server
 - Fall back to reading `.catalystrc` and `catalyst.json` from the local project directory only as a last resort
 
 > **Never ask the user to manually look up IDs from the console** if MCP is connected. Every project detail — org ID, project ID, table IDs, ZAIDs, bucket names — is retrievable via MCP tools. Asking the user to hunt for IDs when MCP is available wastes time and introduces copy-paste errors.
@@ -49,6 +49,8 @@ Load the relevant reference file for detailed information:
 
 | Reference | Contents |
 |-----------|----------|
+| `references/quick-start.md` | First-time setup — install CLI, `catalyst init`, find org/project IDs, add a function, serve locally, deploy, create a Data Store table, configure CORS/Authorized Domains |
+| `references/console-ui-guide.md` | Console navigation — finding Project ID/ZAID/Table ID, creating tables with typed columns, enabling App User permissions (Scopes and Permissions), Authorized Domains + CORS toggle |
 | `references/project-basics.md` | Project directory structure, `catalyst.json`, `.catalystrc`, `catalyst-config.json`, environments, dev-to-prod checklist, all Catalyst IDs (Project ID, ZAID, Table ID, Segment ID, etc.) |
 | `references/cli.md` | Full CLI command reference — all subcommands with flags, Slate/AppSail non-interactive setup, `catalyst serve` port behavior, deploy scoping, safety rules, resource-first development order |
 | `references/architecture.md` | Service selection guide — which Catalyst service to use for which pattern, typical stack combinations, DC availability table for regionally restricted services |
