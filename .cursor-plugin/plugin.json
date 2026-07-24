@@ -1,7 +1,7 @@
 {
   "name": "catalyst-by-zoho",
   "displayName": "Catalyst by Zoho",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "AI agent skill for Catalyst by Zoho — full-stack serverless cloud platform. Covers all services, SDKs, CLI, architecture patterns, pricing, migration guides, and Zoho MCP tool-based resource management.",
   "author": {
     "name": "Catalyst by Zoho",
@@ -22,7 +22,31 @@
   ],
   "rules": "./CATALYST.md",
   "skills": "./skills/",
+  "commands": "./commands/",
+  "hooks": "./hooks/hooks.json",
   "mcpServers": "./.mcp.json",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "CATALYST_MCP_TLD": {
+        "type": "string",
+        "title": "Catalyst MCP data center",
+        "description": "TLD for your Zoho account region (matches catalyst.zoho.<tld>). US=com, EU=eu, IN=in, AU=com.au, CA=ca, SA=sa, JP=jp, UAE=ae.",
+        "enum": [
+          "com",
+          "eu",
+          "in",
+          "com.au",
+          "ca",
+          "sa",
+          "jp",
+          "ae"
+        ],
+        "default": "com"
+      }
+    },
+    "required": ["CATALYST_MCP_TLD"]
+  },
   "logo": "./assets/catalyst_logo.svg",
   "homepage": "https://github.com/catalystbyzoho/cursor-plugin",
   "repository": "https://github.com/catalystbyzoho/cursor-plugin"

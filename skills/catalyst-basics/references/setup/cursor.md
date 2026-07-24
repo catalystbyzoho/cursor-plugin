@@ -1,70 +1,42 @@
 # Using Catalyst Skills with Cursor
 
-## Installation
-
-Add the catalyst-skills repo to your Cursor workspace:
-
-```bash
-# From your project directory
-git clone https://github.com/catalystbyzoho/agent-skills.git .catalyst-skills
-```
-
-Or install via the skills CLI if available:
-
-```bash
-npx skills add catalystbyzoho/agent-skills
-```
+> Shared steps — Installation, MCP authorization, and the pre-flight checklist — are in `setup-common.md`. This file covers Cursor-specific verification and troubleshooting.
 
 ## Skill Activation
 
-Cursor reads skills from the `skills/` directory in your workspace. To verify:
+This Cursor plugin registers skills automatically. To verify:
 
 1. Open Cursor in your Catalyst project directory
-2. Open the Composer (Cmd+I / Ctrl+I)
+2. Open Agent / Composer
 3. Ask: "What Catalyst skills are available?"
 
-## MCP Setup (Recommended)
+You should see routing from `catalyst-by-zoho` and the specialized service skills.
 
-Connect Zoho MCP so Cursor's AI can manage Catalyst infrastructure directly.
+## MCP Setup — Confirm the plugin server
 
-**Step 1 — Get your Zoho MCP URL:**
-1. Go to [mcp.zoho.com](https://mcp.zoho.com) and create or open an MCP server
-2. Under **Tools → Config Tools**, search for **"Catalyst by Zoho"** and add it
-3. Under **Connections**, set authorization to **"On Demand"**
-4. Click **Connect** → copy your server URL (format: `https://<server-name>-<org-id>.zohomcp.com/mcp/<auth-token>/message`)
+First complete the MCP steps in `setup-common.md` (Configure `CATALYST_MCP_TLD`, then Connect). The plugin ships `.mcp.json` with `…zohomcp.${CATALYST_MCP_TLD}/…` — you normally do **not** need a project-level MCP file.
 
-**Step 2 — Add to Cursor MCP config:**
+Optional project override — create `.cursor/mcp.json` only if Plugins → Configure is unavailable or you need a personal Zoho MCP URL. See `../../catalyst-zoho-mcp/references/dc-switching.md`.
 
-Create or edit `.cursor/mcp.json` in your project root:
+Confirm MCP is active under **Cursor Settings → MCP** (green / connected next to `catalyst-by-zoho`).
 
-```json
-{
-  "mcpServers": {
-    "catalyst-by-zoho": {
-      "type": "streamable-http",
-      "url": "https://<server-name>-<org-id>.zohomcp.com/mcp/<auth-token>/message"
-    }
-  }
-}
-```
+## Session start hook
 
-Alternatively, configure globally via **Cursor Settings → MCP → Add Server** and paste the URL.
+The plugin registers a `sessionStart` hook (`hooks/catalyst-context.js`) that:
 
-After saving, restart Cursor. Confirm MCP is active by checking **Cursor Settings → MCP** for a green status indicator next to `catalyst-by-zoho`.
+- Reads `.catalystrc` and injects org / project / environment into agent context
+- Surfaces CLI / Node / runtime prerequisite gaps
+- Warns when the active environment looks like Production
 
-## Pre-flight Checklist
+If the hook does not appear to fire, check **Cursor Settings → Hooks** and the Hooks output channel.
 
-Before asking Cursor to write Catalyst code, ensure:
+## Common Errors (Cursor)
 
-- [ ] `catalyst login` has been run in your terminal
-- [ ] `catalyst init` has been run in the project directory
-- [ ] `.catalystrc` and `catalyst.json` exist at the project root
-- [ ] (Optional) Zoho MCP server shows connected in Cursor MCP settings
-
-## Common Errors
+See `setup-common.md` for errors common to setup. Cursor-specific:
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| Cursor writes files without a project | `.catalystrc` or `catalyst.json` missing | Run `catalyst login` then `catalyst init` |
-| MCP not connecting | Config path wrong or URL placeholder not replaced | Verify the URL in `.cursor/mcp.json` is your actual Zoho MCP URL from mcp.zoho.com |
-| MCP shows red/error status | Invalid or expired URL | Regenerate the URL at mcp.zoho.com and update the config |
+| MCP not connecting | Plugin not installed or OAuth incomplete | Install the plugin, then Cursor Settings → MCP → Connect |
+| MCP shows needs authentication | Token expired or DC mismatch | Re-Connect; if region errors persist, Plugins → Configure → correct `CATALYST_MCP_TLD` (see `../../catalyst-zoho-mcp/references/dc-switching.md`) |
+| Skills not listed | Plugin not loaded | Confirm under Cursor Settings → Plugins; reload window |
+| Hook context missing | sessionStart race / hook disabled | Prefer rules + preflight gate; check Hooks output channel |
