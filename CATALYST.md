@@ -81,15 +81,19 @@ If the loaded skill's reference files do not contain the answer, use a site-scop
 
 ## Deployment Preferences
 
-- Prefer `catalyst deploy -ni` from the CLI over manual console uploads (always non-interactive — see the CLI Usage rule).
+- **Local-first (required in plans and implementation).** Catalyst has three environments — **Local** (`catalyst serve` on this machine), **Development** (remote sandbox, default `catalyst deploy` target), and **Production** (remote/live, reached only by migrating verified Development changes up). For any component you run yourself (Functions, AppSail, Slate), **serve and test on Local before deploying to Development**. Never plan or execute a path that jumps from writing code straight to `catalyst deploy` unless the user explicitly says to skip local testing.
+- When creating or revising a **plan** for a Catalyst app/feature that includes Functions, AppSail, or Slate, always include an explicit todo/phase for **`catalyst serve` + local verification** (curl function URLs, hit AppSail routes, or click through the Slate UI; run project tests) **before** any Development deploy step. Prefer plain `catalyst serve` (not the native `npm run dev` / `vite` / `next dev` server).
+- Prefer `catalyst deploy -ni` from the CLI over manual console uploads (always non-interactive — see the CLI Usage rule) — and only after the local serve + test pass succeeds.
 - Always verify project structure matches Catalyst's requirements before suggesting deploy.
 - After deployment, recommend checking **DevOps → Logs** for execution errors on first invocation.
 - For scheduled (Job Scheduling) and event-driven (Signals) functions, proactively suggest configuring Application Alerts.
+- Full loop: `skills/catalyst-basics/references/project-basics.md` → **Environments**.
 
 ---
 
 ## Verification
 
+- After writing serve-able code (Functions, AppSail, Slate), run `catalyst serve` and exercise the change locally before treating the work as done or deploying.
 - After writing code, verify it matches Catalyst's expected project structure and handler signatures.
 - After infrastructure creation via MCP tools, verify access with a read operation (e.g., `List_All_Tables`) before performing writes.
 - Never leave placeholder IDs unexplained — resolve via MCP when connected; otherwise tell the user where to find the real value.
