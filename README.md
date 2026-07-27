@@ -9,9 +9,11 @@ This plugin gives Cursor deep knowledge of Catalyst services, SDK patterns, CLI 
 | Component | Path | Description |
 |-----------|------|-------------|
 | **Rules** | `CATALYST.md` | Always-on behavioral rules and MCP routing for Catalyst projects |
-| **Skills** | `skills/` | 14 specialized agent skills (functions, AppSail, Data Store, Stratus, Slate, SDKs, pricing, and more) |
-| **MCP** | `.mcp.json` | Zoho MCP server config for `CatalystbyZoho_*` infrastructure tools |
-| **Manifest** | `.cursor-plugin/plugin.json` | Plugin metadata for Cursor Marketplace and local installs |
+| **Skills** | `skills/` | Specialized agent skills (functions, AppSail, Data Store, Stratus, Slate, Signals, SmartBrowz, SDKs, pricing, and more) |
+| **Hooks** | `hooks/` | `sessionStart` context bootstrap from `.catalystrc` + local toolchain checks |
+| **Commands** | `commands/` | Agent commands (e.g. `switch-dc` guides DC changes via Plugins → Configure) |
+| **MCP** | `.mcp.json` | Zoho MCP server; URL uses plugin variable `CATALYST_MCP_TLD` |
+| **Manifest** | `.cursor-plugin/plugin.json` | Plugin metadata, including the DC TLD `variables` enum |
 
 ### Skills
 
@@ -27,10 +29,12 @@ This plugin gives Cursor deep knowledge of Catalyst services, SDK patterns, CLI 
 | `catalyst-nosql` | Document storage, collections |
 | `catalyst-cache` | In-memory key-value cache |
 | `catalyst-authentication` | User auth, ZAID, Connections/OAuth |
+| `catalyst-signals` | Event-driven triggers, pub/sub (replaces Event Listeners) |
+| `catalyst-smartbrowz` | Headless browser, PDF/screenshot, Browser Logic, Dataverse |
 | `catalyst-pricing` | Free tier, pay-as-you-go, cost estimation |
 | `catalyst-sdk` | Node.js, Web, Python, Java, mobile SDKs |
 | `catalyst-zia` | Zia Services, QuickML, OCR/ML |
-| `catalyst-zoho-mcp` | MCP setup and `CatalystbyZoho_*` tool usage |
+| `catalyst-zoho-mcp` | MCP setup and `CatalystbyZoho_*` via `ZohoMCP_executeTool` |
 
 > **Note:** For edge-case lookups not covered by skill reference files, agents are instructed to search `docs.catalyst.zoho.com` and fetch individual pages — keeping the plugin lean while ensuring up-to-date answers.
 
@@ -65,30 +69,37 @@ https://github.com/catalystbyzoho/cursor-plugin
 
 ## Catalyst MCP server (pre-configured)
 
-The plugin ships with the Catalyst MCP server **pre-wired** in `.mcp.json`, so Cursor can manage Catalyst infrastructure (create tables, query data, manage cache/buckets) directly from chat — no manual MCP server creation or URL copying required.
+The plugin ships the Catalyst MCP server in `.mcp.json` with `"url": "https://catalystbyzoho.zohomcp.${CATALYST_MCP_TLD}/mcp/message"`. Pick your data center TLD once via the plugin variable — no manual URL copying required.
+
+### Choose your data center
+
+1. Open **Cursor Settings → Plugins → Catalyst by Zoho → Configure**.
+2. Set **Catalyst MCP data center** (`CATALYST_MCP_TLD`) to your region TLD (default: `com` / US).
+3. Reload the window if the MCP endpoint does not update.
+
+| Data Center | `CATALYST_MCP_TLD` | MCP Server URL |
+|-------------|--------------------|----------------|
+| **US** (default) | `com` | `https://catalystbyzoho.zohomcp.com/mcp/message` |
+| **EU** | `eu` | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
+| **IN** | `in` | `https://catalystbyzoho.zohomcp.in/mcp/message` |
+| **AU** | `com.au` | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
+| **CA** | `ca` | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
+| **SA** | `sa` | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
+| **JP** | `jp` | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
+| **UAE** | `ae` | `https://catalystbyzoho.zohomcp.ae/mcp/message` |
+
+To change regions later, use Configure again, run the **`switch-dc`** command, or ask the agent (see `skills/catalyst-zoho-mcp/references/dc-switching.md`).
 
 ### Authorize once
 
 1. Open **Cursor Settings → MCP**.
 2. Find **catalyst-by-zoho** (may show "Needs authentication").
 3. Click **Connect** and complete Zoho OAuth in your browser.
-4. Confirm `CatalystbyZoho_*` tools appear in the tool list.
+4. Confirm `ZohoMCP_*` meta-tools appear in the tool list.
 
 The first time you invoke a Catalyst MCP tool, you may be prompted to authorize again if the session has expired — click **Connect** to re-authenticate.
 
-> **Region note:** `.mcp.json` defaults to the **US** data center endpoint (`https://catalystbyzoho.zohomcp.com/mcp/message`). If your Catalyst account is on a different DC, update the `url` to match your region — or ask the agent to switch it for you.
-
-| Data Center | MCP Server URL |
-|-------------|----------------|
-| **US** (default) | `https://catalystbyzoho.zohomcp.com/mcp/message` |
-| **EU** | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
-| **IN** | `https://catalystbyzoho.zohomcp.in/mcp/message` |
-| **AU** | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
-| **CA** | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
-| **SA** | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
-| **JP** | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
-
-> **Fallback:** If the URL for your DC doesn't work, go to [mcp.zoho.com](https://mcp.zoho.com) → **Connect** → copy the exact URL shown for your account and update it in **Cursor Settings → MCP**.
+> **Fallback:** If the Configure picker is unavailable, create a project `.cursor/mcp.json` with the URL for your DC, or copy a personal URL from [mcp.zoho.com](https://mcp.zoho.com).
 
 For detailed MCP tool reference and verification steps, see `skills/catalyst-zoho-mcp/references/zoho-mcp.md`.
 
@@ -96,9 +107,10 @@ For detailed MCP tool reference and verification steps, see `skills/catalyst-zoh
 
 Before asking Cursor to write or deploy Catalyst code:
 
-- [ ] `catalyst login` has been run in your terminal
-- [ ] `catalyst init` has been run in your project directory
+- [ ] `catalyst login --dc <dc> -ni` has been run in your terminal
+- [ ] `catalyst init --org <orgId> -p <projectId> -ni` has been run in your project directory
 - [ ] `.catalystrc` and `catalyst.json` exist at the project root
+- [ ] **Catalyst MCP data center** matches your account region (**Plugins → Configure**)
 - [ ] **catalyst-by-zoho** shows connected in **Cursor Settings → MCP** (click Connect if needed)
 
 ## Plugin structure
@@ -106,9 +118,14 @@ Before asking Cursor to write or deploy Catalyst code:
 ```text
 cursor-plugin/
 ├── .cursor-plugin/
-│   └── plugin.json       # Plugin manifest
+│   └── plugin.json       # Manifest + CATALYST_MCP_TLD variable enum
 ├── CATALYST.md           # Behavioral rules (wired via manifest)
-├── .mcp.json             # Zoho MCP server config
+├── .mcp.json             # MCP server (url = …zohomcp.${CATALYST_MCP_TLD}/…)
+├── hooks/
+│   ├── hooks.json        # sessionStart hook registration
+│   └── catalyst-context.js
+├── commands/
+│   └── switch-dc.md      # Guide DC change via Plugins → Configure
 ├── skills/               # Agent skills (auto-discovered)
 │   ├── catalyst-by-zoho/
 │   ├── catalyst-basics/
@@ -118,6 +135,10 @@ cursor-plugin/
 └── README.md
 ```
 
+## Session start hook
+
+When an Agent session starts in a Catalyst workspace (`.catalystrc` present), the plugin's `sessionStart` hook injects org/project/environment context and reports local CLI/runtime gaps. It is fire-and-forget and does not block session creation. The readiness gate in `skills/catalyst-basics/references/preflight.md` still verifies MCP parity before mutations.
+
 ## About CATALYST.md
 
 `CATALYST.md` is a **lightweight rules file** — MCP routing and core behavioral guardrails for Catalyst work. It is registered in `plugin.json` as the plugin's rules source.
@@ -126,15 +147,17 @@ cursor-plugin/
 
 ## What this plugin enables
 
-- **Architecture recommendations** — Catalyst-specific service picks for your use case
+- **Architecture recommendations** — Catalyst-specific service picks for your use case (including Signals and SmartBrowz)
 - **Production-ready code generation** — correct handler signatures, SDK patterns, `catalyst-config.json`, and project structure compatible with `catalyst deploy`
+- **Local-first workflow** — `sessionStart` context from `.catalystrc`, CLI/runtime prerequisite checks, and serve-before-deploy guidance
 - **Platform migration guidance** — maps AWS, GCP, Azure, Vercel, Firebase, Supabase, and Heroku services to Catalyst equivalents
-- **Infrastructure management via Zoho MCP** — create tables, insert data, run ZCQL, manage cache/buckets from chat
+- **Infrastructure management via Zoho MCP** — create tables, insert data, run ZCQL, manage cache/buckets from chat (`ZohoMCP_*` meta-tools → `CatalystbyZoho_*` operations)
+- **DC switching** — `switch-dc` command + Plugins → Configure for `CATALYST_MCP_TLD`
 - **Pricing estimation** — cost breakdowns with unit prices and free tier offsets
 
 ## Other AI tools
 
-This repository is the **Cursor-specific** distribution. For Claude Code, Gemini CLI, Codex, Windsurf, and other agents, see the multi-tool [agent-skills](https://github.com/catalystbyzoho/agent-skills) repository.
+This repository is the **Cursor-specific** distribution (skills, rules, hooks, commands, MCP). For Claude Code, see [claude-plugin](https://github.com/catalystbyzoho/claude-plugin). For a multi-tool skills pack, see [agent-skills](https://github.com/catalystbyzoho/agent-skills).
 
 ## License
 
