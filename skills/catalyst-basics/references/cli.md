@@ -1,6 +1,6 @@
 # CLI Command Reference
 
-Complete reference for the Catalyst CLI (`catalyst` / `zcatalyst`). For official docs see: https://docs.catalyst.zoho.com/en/cli/v1/cli-command-reference/
+Complete reference for the Catalyst CLI (`catalyst`, from the `zcatalyst-cli` npm package). For official docs see: https://docs.catalyst.zoho.com/en/cli/v1/cli-command-reference/
 
 ---
 
