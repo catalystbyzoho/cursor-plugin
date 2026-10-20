@@ -14,9 +14,9 @@ You should see routing from `catalyst-by-zoho` and the specialized service skill
 
 ## MCP Setup — Confirm the plugin server
 
-First complete the MCP steps in `setup-common.md` (Configure `CATALYST_MCP_TLD`, then Connect). The plugin ships `.mcp.json` with `…zohomcp.${CATALYST_MCP_TLD}/…` — you normally do **not** need a project-level MCP file.
+First complete the MCP steps in `setup-common.md` (run `switch-dc` if not on US, then Connect). The plugin ships one MCP server per data center; enable yours (see `switch-dc`).
 
-Optional project override — create `.cursor/mcp.json` only if Plugins → Configure is unavailable or you need a personal Zoho MCP URL. See `../../catalyst-zoho-mcp/references/dc-switching.md`.
+Optional project override — create `.cursor/mcp.json` only for a personal Zoho MCP URL (DC switching uses `switch-dc`). See `../../catalyst-zoho-mcp/references/dc-switching.md`.
 
 Confirm MCP is active under **Cursor Settings → MCP** (green / connected next to `catalyst-by-zoho`).
 
@@ -37,6 +37,6 @@ See `setup-common.md` for errors common to setup. Cursor-specific:
 | Error | Cause | Fix |
 |-------|-------|-----|
 | MCP not connecting | Plugin not installed or OAuth incomplete | Install the plugin, then Cursor Settings → MCP → Connect |
-| MCP shows needs authentication | Token expired or DC mismatch | Re-Connect; if region errors persist, Plugins → Configure → correct `CATALYST_MCP_TLD` (see `../../catalyst-zoho-mcp/references/dc-switching.md`) |
+| MCP shows needs authentication | Token expired or DC mismatch | Re-Connect; if region errors persist, run `switch-dc` for the correct DC (see `../../catalyst-zoho-mcp/references/dc-switching.md`) |
 | Skills not listed | Plugin not loaded | Confirm under Cursor Settings → Plugins; reload window |
 | Hook context missing | sessionStart race / hook disabled | Prefer rules + preflight gate; check Hooks output channel |

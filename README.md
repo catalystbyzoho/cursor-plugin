@@ -11,8 +11,8 @@ This plugin gives Cursor deep knowledge of Catalyst services, SDK patterns, CLI 
 | **Rules** | `CATALYST.md` | Always-on behavioral rules and MCP routing for Catalyst projects |
 | **Skills** | `skills/` | Specialized agent skills (functions, AppSail, Data Store, Stratus, Slate, Signals, SmartBrowz, SDKs, pricing, and more) |
 | **Hooks** | `hooks/` | `sessionStart` context bootstrap from `.catalystrc` + local toolchain checks |
-| **Commands** | `commands/` | Agent commands (e.g. `switch-dc` guides DC changes via Plugins → Configure) |
-| **MCP** | `.mcp.json` | Zoho MCP server; URL uses plugin variable `CATALYST_MCP_TLD` |
+| **Commands** | `commands/` | Agent commands (e.g. `switch-dc` guides enabling your DC's MCP server) |
+| **MCP** | `.mcp.json` | One Zoho MCP server per data center (enable yours) |
 | **Manifest** | `.cursor-plugin/plugin.json` | Plugin metadata, including the DC TLD `variables` enum |
 
 ### Skills
@@ -69,26 +69,20 @@ https://github.com/catalystbyzoho/cursor-plugin
 
 ## Catalyst MCP server (pre-configured)
 
-The plugin ships the Catalyst MCP server in `.mcp.json` with `"url": "https://catalystbyzoho.zohomcp.${CATALYST_MCP_TLD}/mcp/message"`. Pick your data center TLD once via the plugin variable — no manual URL copying required.
+The plugin ships one Catalyst MCP server per data center (`catalyst-by-zoho-us`, `-eu`, `-in`, `-au`, `-ca`, `-sa`, `-jp`, `-uae`). **IN is the default** (listed first); enable the one for your account and disable the others; run **`switch-dc`** for guidance.
 
-### Choose your data center
+| Data Center | MCP Server URL |
+|-------------|----------------|
+| **US** | `https://catalystbyzoho.zohomcp.com/mcp/message` |
+| **EU** | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
+| **IN** (default) | `https://catalystbyzoho.zohomcp.in/mcp/message` |
+| **AU** | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
+| **CA** | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
+| **SA** | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
+| **JP** | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
+| **UAE** | `https://catalystbyzoho.zohomcp.ae/mcp/message` |
 
-1. Open **Cursor Settings → Plugins → Catalyst by Zoho → Configure**.
-2. Set **Catalyst MCP data center** (`CATALYST_MCP_TLD`) to your region TLD (default: `com` / US).
-3. Reload the window if the MCP endpoint does not update.
-
-| Data Center | `CATALYST_MCP_TLD` | MCP Server URL |
-|-------------|--------------------|----------------|
-| **US** (default) | `com` | `https://catalystbyzoho.zohomcp.com/mcp/message` |
-| **EU** | `eu` | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
-| **IN** | `in` | `https://catalystbyzoho.zohomcp.in/mcp/message` |
-| **AU** | `com.au` | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
-| **CA** | `ca` | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
-| **SA** | `sa` | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
-| **JP** | `jp` | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
-| **UAE** | `ae` | `https://catalystbyzoho.zohomcp.ae/mcp/message` |
-
-To change regions later, use Configure again, run the **`switch-dc`** command, or ask the agent (see `skills/catalyst-zoho-mcp/references/dc-switching.md`).
+To change regions later, run the **`switch-dc`** command or ask the agent (see `skills/catalyst-zoho-mcp/references/dc-switching.md`).
 
 ### Authorize once
 
@@ -99,7 +93,7 @@ To change regions later, use Configure again, run the **`switch-dc`** command, o
 
 The first time you invoke a Catalyst MCP tool, you may be prompted to authorize again if the session has expired — click **Connect** to re-authenticate.
 
-> **Fallback:** If the Configure picker is unavailable, create a project `.cursor/mcp.json` with the URL for your DC, or copy a personal URL from [mcp.zoho.com](https://mcp.zoho.com).
+> **Custom URL:** for a non-US DC run `switch-dc`; for a personal server, create a project `.cursor/mcp.json` with the URL for your DC, or copy a personal URL from [mcp.zoho.com](https://mcp.zoho.com).
 
 For detailed MCP tool reference and verification steps, see `skills/catalyst-zoho-mcp/references/zoho-mcp.md`.
 
@@ -110,7 +104,7 @@ Before asking Cursor to write or deploy Catalyst code:
 - [ ] `catalyst login --dc <dc> -ni` has been run in your terminal
 - [ ] `catalyst init --org <orgId> -p <projectId> -ni` has been run in your project directory
 - [ ] `.catalystrc` and `catalyst.json` exist at the project root
-- [ ] **Catalyst MCP data center** matches your account region (**Plugins → Configure**)
+- [ ] **Catalyst MCP data center** matches your account region (run `switch-dc` if not US)
 - [ ] **catalyst-by-zoho** shows connected in **Cursor Settings → MCP** (click Connect if needed)
 
 ## Plugin structure
@@ -118,14 +112,14 @@ Before asking Cursor to write or deploy Catalyst code:
 ```text
 cursor-plugin/
 ├── .cursor-plugin/
-│   └── plugin.json       # Manifest + CATALYST_MCP_TLD variable enum
+│   └── plugin.json       # Manifest
 ├── CATALYST.md           # Behavioral rules (wired via manifest)
-├── .mcp.json             # MCP server (url = …zohomcp.${CATALYST_MCP_TLD}/…)
+├── .mcp.json             # One MCP server per data center
 ├── hooks/
 │   ├── hooks.json        # sessionStart hook registration
 │   └── catalyst-context.js
 ├── commands/
-│   └── switch-dc.md      # Guide DC change via Plugins → Configure
+│   └── switch-dc.md      # Enable the MCP server for a DC
 ├── skills/               # Agent skills (auto-discovered)
 │   ├── catalyst-by-zoho/
 │   ├── catalyst-basics/
@@ -152,7 +146,7 @@ When an Agent session starts in a Catalyst workspace (`.catalystrc` present), th
 - **Local-first workflow** — `sessionStart` context from `.catalystrc`, CLI/runtime prerequisite checks, and serve-before-deploy guidance
 - **Platform migration guidance** — maps AWS, GCP, Azure, Vercel, Firebase, Supabase, and Heroku services to Catalyst equivalents
 - **Infrastructure management via Zoho MCP** — create tables, insert data, run ZCQL, manage cache/buckets from chat (`ZohoMCP_*` meta-tools → `CatalystbyZoho_*` operations)
-- **DC switching** — `switch-dc` command + Plugins → Configure for `CATALYST_MCP_TLD`
+- **DC switching** — `switch-dc` command; one native OAuth MCP server per DC (no republish, no extra dependencies)
 - **Pricing estimation** — cost breakdowns with unit prices and free tier offsets
 
 ## Other AI tools

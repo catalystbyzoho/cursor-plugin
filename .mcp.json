@@ -1,8 +1,36 @@
 {
   "mcpServers": {
-    "catalyst-by-zoho": {
+    "catalyst-by-zoho-in": {
       "type": "streamable-http",
       "url": "https://catalystbyzoho.zohomcp.in/mcp/message"
+    },
+    "catalyst-by-zoho-us": {
+      "type": "streamable-http",
+      "url": "https://catalystbyzoho.zohomcp.com/mcp/message"
+    },
+    "catalyst-by-zoho-eu": {
+      "type": "streamable-http",
+      "url": "https://catalystbyzoho.zohomcp.eu/mcp/message"
+    },
+    "catalyst-by-zoho-au": {
+      "type": "streamable-http",
+      "url": "https://catalystbyzoho.zohomcp.com.au/mcp/message"
+    },
+    "catalyst-by-zoho-ca": {
+      "type": "streamable-http",
+      "url": "https://catalystbyzoho.zohomcp.ca/mcp/message"
+    },
+    "catalyst-by-zoho-sa": {
+      "type": "streamable-http",
+      "url": "https://catalystbyzoho.zohomcp.sa/mcp/message"
+    },
+    "catalyst-by-zoho-jp": {
+      "type": "streamable-http",
+      "url": "https://catalystbyzoho.zohomcp.jp/mcp/message"
+    },
+    "catalyst-by-zoho-uae": {
+      "type": "streamable-http",
+      "url": "https://catalystbyzoho.zohomcp.ae/mcp/message"
     }
   }
 }

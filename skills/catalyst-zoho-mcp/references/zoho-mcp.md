@@ -7,33 +7,28 @@
 
 ## Setup — Plugin MCP (recommended)
 
-This Cursor plugin ships `.mcp.json` with `"url": "https://catalystbyzoho.zohomcp.${CATALYST_MCP_TLD}/mcp/message"`. The TLD comes from the plugin variable **Catalyst MCP data center** (`com` / US by default).
+This Cursor plugin ships one MCP server per data center (`catalyst-by-zoho-<dc>`).
 
 **Step 1 — Pick your Data Center:**
 
-1. Open **Cursor Settings → Plugins → Catalyst by Zoho → Configure**
-2. Set **Catalyst MCP data center** (`CATALYST_MCP_TLD`) to your account region TLD:
+Enable the server for your DC under **Customize → Catalyst By Zoho → MCPs** (disable the others) via **`switch-dc`**. URLs:
 
-| DC | Region | `CATALYST_MCP_TLD` | MCP URL |
-|------|------|------|------|
-| US | United States | `com` | `https://catalystbyzoho.zohomcp.com/mcp/message` |
-| EU | Europe | `eu` | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
-| IN | India | `in` | `https://catalystbyzoho.zohomcp.in/mcp/message` |
-| AU | Australia | `com.au` | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
-| CA | Canada | `ca` | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
-| SA | Saudi Arabia | `sa` | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
-| JP | Japan | `jp` | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
-| UAE | United Arab Emirates | `ae` | `https://catalystbyzoho.zohomcp.ae/mcp/message` |
-
-To change later, use Configure again, the **`switch-dc`** command, or `dc-switching.md`.
+| DC | Region | MCP URL |
+|------|------|------|
+| US | United States | `https://catalystbyzoho.zohomcp.com/mcp/message` |
+| EU | Europe | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
+| IN | India | `https://catalystbyzoho.zohomcp.in/mcp/message` |
+| AU | Australia | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
+| CA | Canada | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
+| SA | Saudi Arabia | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
+| JP | Japan | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
+| UAE | United Arab Emirates | `https://catalystbyzoho.zohomcp.ae/mcp/message` |
 
 **Step 2 — Authorize in Cursor:**
 
 1. Open **Cursor Settings → MCP**
 2. Find **catalyst-by-zoho**
 3. Click **Connect** and complete Zoho OAuth in the browser
-
-Optional project override — only if Configure is unavailable or you need a personal / custom URL — create `.cursor/mcp.json` with a literal `url` for your DC.
 
 **Step 3 — Verify:**
 Look for the `ZohoMCP_*` **meta-tools** in Cursor's tool list — `ZohoMCP_getSchema`,
