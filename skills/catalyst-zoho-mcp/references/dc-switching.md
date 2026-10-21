@@ -23,7 +23,7 @@ The plugin ships one native OAuth MCP server per data center; **IN is the defaul
 
 ## Procedure
 
-1. Ask which DC (or map the console hostname: `catalyst.zoho.eu` → EU, `.in` → IN, etc.).
+1. Ask which DC (or map the console hostname: `catalyst.zoho.eu` → EU, `.in` → IN, etc.). If the DC is unknown or cannot be determined, **fall back to IN**.
 2. Tell the user to open **Customize → Catalyst By Zoho → MCPs**, turn **on** the server for that DC, turn **off** the others, and click **Connect** to complete browser OAuth.
 3. Confirm the `ZohoMCP_*` meta-tools are present again.
 
@@ -45,6 +45,6 @@ Do **not** edit files under `~/.cursor/plugins/`.
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| Still hitting US / wrong region | Wrong server enabled | Enable only the matching `catalyst-by-zoho-<dc>` server |
+| Hitting the wrong region | Wrong server enabled | Enable only the matching `catalyst-by-zoho-<dc>` server |
 | Only auth tools visible after switch | Not yet authorized on the new DC | Settings → MCP → Connect |
 | Region / auth errors | Account DC ≠ configured URL | Pick the matching row from the table above |

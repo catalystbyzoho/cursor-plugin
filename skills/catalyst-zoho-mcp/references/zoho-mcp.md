@@ -11,18 +11,9 @@ This Cursor plugin ships one MCP server per data center (`catalyst-by-zoho-<dc>`
 
 **Step 1 — Pick your Data Center:**
 
-Enable the server for your DC under **Customize → Catalyst By Zoho → MCPs** (disable the others) via **`switch-dc`**. URLs:
+The default is **IN**. For another DC, run **`switch-dc`** (enable that server, disable the others).
 
-| DC | Region | MCP URL |
-|------|------|------|
-| US | United States | `https://catalystbyzoho.zohomcp.com/mcp/message` |
-| EU | Europe | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
-| IN | India | `https://catalystbyzoho.zohomcp.in/mcp/message` |
-| AU | Australia | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
-| CA | Canada | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
-| SA | Saudi Arabia | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
-| JP | Japan | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
-| UAE | United Arab Emirates | `https://catalystbyzoho.zohomcp.ae/mcp/message` |
+URLs: see `dc-switching.md` (single source of truth).
 
 **Step 2 — Authorize in Cursor:**
 

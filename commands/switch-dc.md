@@ -7,18 +7,9 @@ Help the user use the Catalyst by Zoho MCP server for the data center in: $ARGUM
 
 The plugin ships one MCP server per data center. Switching means enabling the matching server and disabling the others. You cannot toggle servers yourself, and you must not edit files under `~/.cursor/plugins/`.
 
-1. Resolve the DC (valid: US, EU, IN, AU, CA, SA, JP, UAE; case-insensitive). If `$ARGUMENTS` is empty or unrecognized, list the table below and ask. Reject unsupported values.
+1. Resolve the DC (valid: US, EU, IN, AU, CA, SA, JP, UAE; case-insensitive). If `$ARGUMENTS` is empty or unrecognized, default to **IN** and ask the user to confirm (or choose another DC). Reject unsupported values.
 
-| DC | Region | MCP server name | URL |
-|----|--------|-----------------|-----|
-| US | United States | `catalyst-by-zoho-us` | `https://catalystbyzoho.zohomcp.com/mcp/message` |
-| EU | Europe | `catalyst-by-zoho-eu` | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
-| IN | India | `catalyst-by-zoho-in` | `https://catalystbyzoho.zohomcp.in/mcp/message` |
-| AU | Australia | `catalyst-by-zoho-au` | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
-| CA | Canada | `catalyst-by-zoho-ca` | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
-| SA | Saudi Arabia | `catalyst-by-zoho-sa` | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
-| JP | Japan | `catalyst-by-zoho-jp` | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
-| UAE | United Arab Emirates | `catalyst-by-zoho-uae` | `https://catalystbyzoho.zohomcp.ae/mcp/message` |
+Server names and URLs: read the DC table in `skills/catalyst-zoho-mcp/references/dc-switching.md` (single source of truth). Server name format: `catalyst-by-zoho-<dc>` (us, eu, in, au, ca, sa, jp, uae).
 
 2. Tell the user:
    - Open **Customize → Catalyst By Zoho → MCPs** (or **Cursor Settings → MCP**).

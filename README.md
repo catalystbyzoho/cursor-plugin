@@ -71,16 +71,7 @@ https://github.com/catalystbyzoho/cursor-plugin
 
 The plugin ships one Catalyst MCP server per data center (`catalyst-by-zoho-us`, `-eu`, `-in`, `-au`, `-ca`, `-sa`, `-jp`, `-uae`). **IN is the default** (listed first); enable the one for your account and disable the others; run **`switch-dc`** for guidance.
 
-| Data Center | MCP Server URL |
-|-------------|----------------|
-| **US** | `https://catalystbyzoho.zohomcp.com/mcp/message` |
-| **EU** | `https://catalystbyzoho.zohomcp.eu/mcp/message` |
-| **IN** (default) | `https://catalystbyzoho.zohomcp.in/mcp/message` |
-| **AU** | `https://catalystbyzoho.zohomcp.com.au/mcp/message` |
-| **CA** | `https://catalystbyzoho.zohomcp.ca/mcp/message` |
-| **SA** | `https://catalystbyzoho.zohomcp.sa/mcp/message` |
-| **JP** | `https://catalystbyzoho.zohomcp.jp/mcp/message` |
-| **UAE** | `https://catalystbyzoho.zohomcp.ae/mcp/message` |
+The server names and URLs are listed in `skills/catalyst-zoho-mcp/references/dc-switching.md`.
 
 To change regions later, run the **`switch-dc`** command or ask the agent (see `skills/catalyst-zoho-mcp/references/dc-switching.md`).
 

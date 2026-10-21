@@ -18,7 +18,7 @@ metadata:
    > **To work with Catalyst via MCP, choose your setup path:**
    >
    > **Option A — Plugin MCP (recommended)**
-   > Run **`switch-dc`** to point MCP at the account's data center (default is US), then **Cursor Settings → MCP → catalyst-by-zoho → Connect**.
+   > Run **`switch-dc`** to point MCP at the account's data center (default is IN), then **Cursor Settings → MCP → catalyst-by-zoho → Connect**.
    >
    > **Option B — Personal MCP Server** *(custom/team setup)*
    > Create your own server at mcp.zoho.com, select tools, get a personal URL with a token embedded, then add it under Cursor Settings → MCP or project `.cursor/mcp.json`.
