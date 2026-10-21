@@ -51,7 +51,7 @@ scaffold code or run CLI commands. Guide the user through MCP setup (see
 > session connected to the wrong DC sees a *different* set of orgs/projects and silently operates on
 > the wrong account. So before your first `CatalystbyZoho_*` operation, **ask the user to confirm the
 > DC** their Zoho account lives in (US, EU, IN, AU, CA, SA, JP, or UAE) and that the MCP server is
-> connected to that DC (Plugins → Catalyst by Zoho → Configure → `CATALYST_MCP_TLD`). Ask this only
+> connected to that DC (run `switch-dc`). Ask this only
 > **once per session**; once confirmed, trust it for the rest of the session and do not re-ask before
 > every call. If the user says the connected DC is wrong, do not proceed — switch it first (see
 > `../../catalyst-zoho-mcp/references/dc-switching.md` or the `switch-dc` command), then resume.

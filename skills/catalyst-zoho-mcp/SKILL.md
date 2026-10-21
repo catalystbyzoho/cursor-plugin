@@ -18,14 +18,14 @@ metadata:
    > **To work with Catalyst via MCP, choose your setup path:**
    >
    > **Option A — Plugin MCP (recommended)**
-   > Set **Plugins → Catalyst by Zoho → Configure → Catalyst MCP data center** to the account region, then **Cursor Settings → MCP → catalyst-by-zoho → Connect**.
+   > Run **`switch-dc`** to point MCP at the account's data center (default is IN), then **Cursor Settings → MCP → catalyst-by-zoho → Connect**.
    >
    > **Option B — Personal MCP Server** *(custom/team setup)*
    > Create your own server at mcp.zoho.com, select tools, get a personal URL with a token embedded, then add it under Cursor Settings → MCP or project `.cursor/mcp.json`.
    >
    > *Which would you prefer?*
 
-3. **DC switch request?** — If the user asks to switch data centers (e.g. "connect to IN DC", "switch to EU", "logout of MCP server"), load `references/dc-switching.md` (or run `switch-dc`). Prefer Plugins → Configure over editing files. Do not use `zoho-mcp.md` for this.
+3. **DC switch request?** — If the user asks to switch data centers (e.g. "connect to IN DC", "switch to EU", "logout of MCP server"), load `references/dc-switching.md` (or run `switch-dc`). It guides enabling the per-DC server; never edit plugin cache files. Do not use `zoho-mcp.md` for this.
 
 4. **Pre-flight sequence** — Once per session, before your first MCP tool call, follow the single canonical pre-flight in `../catalyst-basics/references/preflight.md`: read org (`projects[].env[].id`) and project (`projects[].id`) from `.catalystrc` and confirm parity with MCP via `CatalystbyZoho_Get_Project_By_Id`, or resolve via `List_All_Organizations` → `List_All_Projects` when `.catalystrc` is absent. Once it passes, trust the context for the rest of the session — do not re-verify before every call.
 
@@ -45,5 +45,5 @@ Use this skill for: "Zoho MCP", "MCP tools", "catalyst MCP", "create table with 
 |-----------|-------------------------------|
 | `../catalyst-basics/references/preflight.md` | **The workspace readiness gate** (canonical pre-flight, lives in `catalyst-basics`) — establishing + verifying org/project (via `.catalystrc` + `Get_Project_By_Id` reconciliation, or `List_All_*` fallback) and environment awareness. The single source every skill links to. |
 | `references/zoho-mcp.md` | Cursor MCP setup, all available CatalystbyZoho_* tools, execution flow, common MCP errors |
-| `references/dc-switching.md` | Switching data centers via Plugins → Configure (`CATALYST_MCP_TLD`) |
+| `references/dc-switching.md` | Switching data centers via the `switch-dc` command (enable the matching per-DC MCP server) |
 | `references/mcp-datastore.md` | Creating tables/columns via MCP, DataStore column types, batch column creation, data type constraints |
